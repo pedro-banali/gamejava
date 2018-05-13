@@ -3,9 +3,14 @@ package jogo.modelos;
 public class Usuario {
 	
 	private String nome;
-	private int checkPoint;
+	private int checkPointX;
+	private int checkPointY;
 	private int pontos;
-	private int vida;
+	private int vida = 0;
+	
+	public Usuario() {
+		this.vida = 3;
+	}
 	
 	public String getNome() {
 		return nome;
@@ -13,11 +18,17 @@ public class Usuario {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	public int getCheckPoint() {
-		return checkPoint;
+	public int getCheckPointX() {
+		return checkPointX;
 	}
-	public void setCheckPoint(int checkPoint) {
-		this.checkPoint = checkPoint;
+	public void setCheckPointX(int checkPointX) {
+		this.checkPointX = checkPointX;
+	}
+	public int getCheckPointY() {
+		return checkPointY;
+	}
+	public void setCheckPointY(int checkPointY) {
+		this.checkPointY = checkPointY;
 	}
 	public int getPontos() {
 		return pontos;
@@ -28,8 +39,8 @@ public class Usuario {
 	public int getVida() {
 		return vida;
 	}
-	public void setVida(int vida) {
-		this.vida = vida;
+	public void setVida() {
+		this.vida--;
 	}
 
 }

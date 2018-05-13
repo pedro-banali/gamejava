@@ -1,8 +1,13 @@
 package jogo.principal;
 
 import java.awt.BorderLayout;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 
 public class Tela {
 	private PainelDoJogo painel;

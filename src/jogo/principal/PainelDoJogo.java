@@ -4,7 +4,9 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import jogo.estados.GerenciadorDeEstado;
@@ -13,7 +15,7 @@ public class PainelDoJogo extends JPanel implements Runnable, KeyListener{
 
 	private static final long serialVersionUID = 1L;
 	
-	public static final int WIDTH = 1800;
+	public static final int WIDTH = 900;
 	public static final int HEIGHT = 450;
 	
 	private Thread thread;
@@ -30,6 +32,7 @@ public class PainelDoJogo extends JPanel implements Runnable, KeyListener{
 		
 		addKeyListener(this);
 		setFocusable(true);
+
 		
 		this.instanciarThread();
 	}
@@ -76,6 +79,12 @@ public class PainelDoJogo extends JPanel implements Runnable, KeyListener{
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		g.clearRect(0, 0, WIDTH, HEIGHT);
+		try {
+			g.drawImage(ImageIO.read(getClass().getResourceAsStream("/blocks/fundo.png")), 0, -0, WIDTH, HEIGHT, null);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		gerenciadorDeEstado.draw(g);
 	}
 

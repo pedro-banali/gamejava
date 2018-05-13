@@ -1,13 +1,17 @@
 package jogo.entidades;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 import jogo.estados.Estado;
 import jogo.fisica.Colisao;
+import jogo.modelos.Usuario;
 import jogo.obstaculos.Bloco;
+import jogo.obstaculos.BlocoMovimento;
 import jogo.principal.PainelDoJogo;
 
 public class Player {
@@ -15,7 +19,8 @@ public class Player {
 	private boolean right = false;
 	private boolean left = false;
 	private boolean colisaoTopo = false;
-
+	private Usuario dadosPlayer;
+	private Usuario dadosPlayer2;
 	// limites
 	private double x, y;
 	private int width, height;
@@ -35,18 +40,21 @@ public class Player {
 	private double atualVelCaindo;
 
 	public Player(int width, int height) {
-		velPulo = 5;
+		dadosPlayer = new Usuario();
+		dadosPlayer2 = new Usuario();
+		velPulo = 5.5;
 		atualVelPulo = velPulo;
-		maxVelCaindo = 5;
+		maxVelCaindo = 5.5;
 		atualVelCaindo = 0.1;
 
 		x = PainelDoJogo.WIDTH / 2;
 		y = PainelDoJogo.HEIGHT / 2;
 		this.width = width;
 		this.height = height;
+		
 	}
 
-	public void tick(Bloco[][] b) {
+	public void tick(Bloco[][] b, ArrayList<BlocoMovimento> blocoMovimentos, ArrayList<Vilao> viloes) {
 
 		int iX = (int) x;
 		int iY = (int) y;
@@ -71,14 +79,14 @@ public class Player {
 				// topo
 				if (Colisao.playerBloco(new Point(iX + (int) Estado.xOffset + 1, iY + (int) Estado.yOffset), b[i][j])
 						|| Colisao.playerBloco(
-								new Point(iX + width + (int) Estado.xOffset - 1, iY + (int) Estado.yOffset), b[i][j])) {
+								new Point(iX + width + (int) Estado.xOffset - 2, iY + (int) Estado.yOffset), b[i][j])) {
 					pulando = false;
 					caindo = true;
 				}
 				// baixo
 				if (Colisao.playerBloco(
 						new Point(iX + (int) Estado.xOffset + 2, iY + height + (int) Estado.yOffset + 1), b[i][j])
-						|| Colisao.playerBloco(new Point(iX + width + (int) Estado.xOffset - 1,
+						|| Colisao.playerBloco(new Point(iX + width + (int) Estado.xOffset - 2,
 								iY + height + (int) Estado.yOffset + 1), b[i][j])) {
 					y = b[i][j].getY() - height - Estado.yOffset;
 					caindo = false;
@@ -90,7 +98,50 @@ public class Player {
 			}
 
 		}
+		
+		for (int i = 0; i < blocoMovimentos.size(); i++) {
+			BlocoMovimento bloco = blocoMovimentos.get(i);
+			if(bloco.getID()!=0) {
+				if (Colisao.playerBlocoMovimento(new Point(iX + width + (int) Estado.xOffset, iY + (int) Estado.yOffset + 2),
+						bloco)
+						|| Colisao.playerBlocoMovimento(
+								new Point(iX + width + (int) Estado.xOffset, iY + height + (int) Estado.yOffset -2),
+								bloco)) {
+					right = false;
+					caindo =true;
+				}
+				// esquerda
+				if (Colisao.playerBlocoMovimento(new Point(iX + (int) Estado.xOffset - 1, iY + (int) Estado.yOffset + 2), bloco)
+						|| Colisao.playerBlocoMovimento(
+								new Point(iX + (int) Estado.xOffset - 2, iY + height + (int) Estado.yOffset - 2),
+								bloco)) {
+					left = false;
+					caindo =true;
+				}
+				// topo
+				if (Colisao.playerBlocoMovimento(new Point(iX + (int) Estado.xOffset + 1, iY + (int) Estado.yOffset), bloco)
+						|| Colisao.playerBlocoMovimento(
+								new Point(iX + width + (int) Estado.xOffset - 2, iY + (int) Estado.yOffset), bloco)) {
+					pulando = false;
+					caindo = true;
+				}
+				// baixo
+				if (Colisao.playerBlocoMovimento(
+						new Point(iX + (int) Estado.xOffset + 2, iY + height + (int) Estado.yOffset + 1), bloco)
+						|| Colisao.playerBlocoMovimento(new Point(iX + width + (int) Estado.xOffset ,
+								iY + height + (int) Estado.yOffset), bloco)) {
 
+					caindo = false;
+					colisaoTopo = true;
+					
+					Estado.xOffset += bloco.getMovimento();
+					
+				} else {
+					if (!colisaoTopo && !pulando)
+						caindo = true;
+				}
+			}
+		}
 		colisaoTopo = false;
 
 		if (right) {
@@ -115,12 +166,60 @@ public class Player {
 			atualVelCaindo = 0.1;
 
 		}
+		
+		for (int i = 0; i < viloes.size(); i++) {
+			Vilao vilao = viloes.get(i);
+			if(vilao.getID()!=0) {
+				if (Colisao.playerVilao(
+						new Point(iX + width + (int) Estado.xOffset, iY + (int) Estado.yOffset + 2), vilao)
+						|| Colisao.playerVilao(
+								new Point(iX + width + (int) Estado.xOffset, iY + height + (int) Estado.yOffset - 2),
+								vilao)) {
+					right = false;
+					Estado.xOffset = dadosPlayer.getCheckPointX();
+					Estado.yOffset = dadosPlayer.getCheckPointY();
+					dadosPlayer.setVida();
+				}
+				// esquerda
+				if (Colisao.playerVilao(
+						new Point(iX + (int) Estado.xOffset - 1, iY + (int) Estado.yOffset + 2), vilao)
+						|| Colisao.playerVilao(
+								new Point(iX + (int) Estado.xOffset - 2, iY + height + (int) Estado.yOffset - 2),
+								vilao)) {
+					left = false;
+
+				}
+				// topo
+				if (Colisao.playerVilao(new Point(iX + (int) Estado.xOffset + 1, iY + (int) Estado.yOffset),
+						vilao)
+						|| Colisao.playerVilao(
+								new Point(iX + width + (int) Estado.xOffset - 2, iY + (int) Estado.yOffset), vilao)) {
+					pulando = false;
+
+				}
+				// baixo
+				if (Colisao.playerVilao(
+						new Point(iX + (int) Estado.xOffset + 2, iY + height + (int) Estado.yOffset + 1), vilao)
+						|| Colisao.playerVilao(
+								new Point(iX + width + (int) Estado.xOffset, iY + height + (int) Estado.yOffset),
+								vilao)) {
+
+					colisaoTopo = true;
+
+					Estado.xOffset += vilao.getMovimento();
+
+				} 
+			}
+		}
 
 	}
 
 	public void draw(Graphics g) {
 		g.setColor(Color.BLACK);
+		g.setFont(new Font("Arial", Font.PLAIN, 32));
+		g.drawString("Vidas: " + dadosPlayer.getVida(), (int)(x -400), (int)(y - 150));
 		g.fillRect((int) x, (int) y, width, height);
+
 
 	}
 
@@ -141,4 +240,12 @@ public class Player {
 			left = false;
 	}
 
+	public void setCheckpoint(int x) {
+		dadosPlayer.setCheckPointX(x);
+		dadosPlayer.setCheckPointY(-300);
+	}
+	public void getCheckpoint() {
+		Estado.xOffset = dadosPlayer.getCheckPointX();
+		Estado.yOffset = dadosPlayer.getCheckPointY();
+	}
 }
