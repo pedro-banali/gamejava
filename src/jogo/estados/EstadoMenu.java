@@ -66,7 +66,7 @@ public class EstadoMenu extends Estado {
 		if(k == KeyEvent.VK_ENTER) {
 			if(currentSelection == 0) {
 				
-				gerenciadorDeEstado.getEstados().push(new PrimeiraFase(gerenciadorDeEstado));
+				gerenciadorDeEstado.getEstados().push(new Fase(gerenciadorDeEstado));
 				
 			}else if(currentSelection == 1) {
 				

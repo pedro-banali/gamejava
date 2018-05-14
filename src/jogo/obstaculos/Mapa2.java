@@ -12,7 +12,7 @@ import jogo.entidades.VilaoBola;
 import jogo.entidades.VilaoCogumelo;
 import jogo.entidades.VilaoSouth;
 
-public class Mapa {
+public class Mapa2 {
 	private String caminho;
 	private String line;
 	private int width, height;
@@ -23,7 +23,7 @@ public class Mapa {
 	private ArrayList<Vilao> viloes;
 	private ArrayList<Obstaculo> obstaculos;
 
-	public Mapa(String caminho) {
+	public Mapa2(String caminho) {
 		this.caminho = caminho;
 		blocoMovimentos = new ArrayList<BlocoMovimento>();
 		viloes = new ArrayList<Vilao>();

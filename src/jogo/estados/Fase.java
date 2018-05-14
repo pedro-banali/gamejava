@@ -7,13 +7,13 @@ import jogo.entidades.Player;
 import jogo.obstaculos.Mapa;
 import jogo.principal.PainelDoJogo;
 
-public class PrimeiraFase extends Estado
+public class Fase extends Estado
 {
 	private Player player;
 	private Mapa mapa, mapa_2, mapa_3;
 	
 	
-	public PrimeiraFase (GerenciadorDeEstado gerenciadorDeEstado) {
+	public Fase (GerenciadorDeEstado gerenciadorDeEstado) {
 		super(gerenciadorDeEstado);
 	}
 
@@ -22,17 +22,13 @@ public class PrimeiraFase extends Estado
 		player = new Player(30 , 30);
 		mapa = new Mapa("/Maps/primeirafase.mapa");		
 		
-		xOffset = 3500;
+		xOffset = -300;
 		yOffset = -300;
 		
 //		xOffset = -300; // Original
 //		yOffset = -300;
 		
 		player.setCheckpoint((int)xOffset);
-	}
-	
-	public void fase2() {
-		
 	}
 
 	@Override
@@ -41,11 +37,13 @@ public class PrimeiraFase extends Estado
 		if(yOffset > 100) {
 			player.getCheckpoint();
 		}
-		if(xOffset > 400 && xOffset < 499 && yOffset < 300)
-			player.setCheckpoint(400);
-		else if(xOffset > 500 && yOffset < 300)
-			player.setCheckpoint(500);
-		player.tick(mapa.getBlocos(), mapa.getBlocoMovimento(), mapa.getViloes());
+		if(xOffset == 640 && yOffset < 300)
+			player.setCheckpoint(640);
+		if(xOffset == 1664 && yOffset < 300)
+			player.setCheckpoint(1664);
+		if(xOffset == 2881 && yOffset < 300)
+			player.setCheckpoint(2881);
+		player.tick(mapa.getBlocos(), mapa.getBlocoMovimento(), mapa.getViloes(), mapa.getObstaculos());
 		mapa.tick();
 		
 	}
@@ -54,6 +52,7 @@ public class PrimeiraFase extends Estado
 	public void draw(Graphics g) {
 		player.draw(g);
 		mapa.draw(g);
+		g.drawString(xOffset + "", 100, 100);
 	}
 
 	@Override
