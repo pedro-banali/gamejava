@@ -2,20 +2,19 @@ package jogo.entidades;
 
 import java.awt.Graphics;
 
-import jogo.obstaculos.Bloco;
 import jogo.recursosexternos.Imagem;
 
-public class VilaoSouth extends Vilao {
+public class VilaoChefao extends Vilao {
 	
 	private int limiteEsquerda;
 	private int limiteDireita;	
 	private int vida;
 
-	public VilaoSouth(int x, int y, int id, int limiteEsquerda, int limiteDireita) {
+	public VilaoChefao(int x, int y, int id, int limiteEsquerda, int limiteDireita) {
 		super();
 		vida = 1;
 		movimento = 1;
-		retangulo.setBounds(x, y, Bloco.tamanhoBloco, Bloco.tamanhoBloco);
+		retangulo.setBounds(x, y, 100, 100);
 		
 		this.id = id;
 		this.limiteDireita = limiteDireita;
@@ -37,7 +36,7 @@ public class VilaoSouth extends Vilao {
 
 	public void draw(Graphics g) {
 		if (id != 0) {
-			g.drawImage(Imagem.getInstance().getImagens()[5], retangulo.x - (int) camera.getxOffset(),
+			g.drawImage(Imagem.getInstance().getImagens()[11], retangulo.x - (int) camera.getxOffset(),
 					retangulo.y - (int) camera.getyOffset(), retangulo.width, retangulo.height, null);
 
 		}

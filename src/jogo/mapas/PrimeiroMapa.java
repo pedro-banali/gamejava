@@ -1,4 +1,4 @@
-package jogo.obstaculos;
+package jogo.mapas;
 
 import java.awt.Graphics;
 import java.io.BufferedReader;
@@ -11,24 +11,19 @@ import jogo.entidades.Vilao;
 import jogo.entidades.VilaoBola;
 import jogo.entidades.VilaoCogumelo;
 import jogo.entidades.VilaoSouth;
+import jogo.obstaculos.Bloco;
+import jogo.obstaculos.BlocoMovimento;
+import jogo.obstaculos.ObstaculoDiverso;
 
-public class Mapa2 {
-	private String caminho;
-	private String line;
-	private int width, height;
+public class PrimeiroMapa extends Mapa {
+	
 
-	private Bloco[][] blocos;
-
-	private ArrayList<BlocoMovimento> blocoMovimentos;
-	private ArrayList<Vilao> viloes;
-	private ArrayList<Obstaculo> obstaculos;
-
-	public Mapa2(String caminho) {
-		this.caminho = caminho;
+	public PrimeiroMapa(String caminho, boolean mapaAtual) {
+		super(caminho, mapaAtual);
 		blocoMovimentos = new ArrayList<BlocoMovimento>();
 		viloes = new ArrayList<Vilao>();
 		blocos = new Bloco[height][width];
-		obstaculos = new ArrayList<Obstaculo>();
+		obstaculoDiversos = new ArrayList<ObstaculoDiverso>();
 
 		carregarMapa();
 	}
@@ -57,8 +52,8 @@ public class Mapa2 {
 			viloes.get(i).draw(g);
 		}
 		
-		for (int i = 0; i < obstaculos.size(); i++) {
-			obstaculos.get(i).draw(g);
+		for (int i = 0; i < obstaculoDiversos.size(); i++) {
+			obstaculoDiversos.get(i).draw(g);
 		}
 	}
 
@@ -126,17 +121,17 @@ public class Mapa2 {
 				}
 			}
 
-		Obstaculo obs = new Obstaculo(2560, -0, id, 2);
-		obstaculos.add(obs);
+		ObstaculoDiverso obs = new ObstaculoDiverso(2560, -0, id, 2);
+		obstaculoDiversos.add(obs);
 		
-		obs = new Obstaculo(2560, -64, id, 2);
-		obstaculos.add(obs);
+		obs = new ObstaculoDiverso(2560, -64, id, 2);
+		obstaculoDiversos.add(obs);
 		
-		obs = new Obstaculo(260, 0, id, 6);
-		obstaculos.add(obs);
+		obs = new ObstaculoDiverso(260, 0, id, 6);
+		obstaculoDiversos.add(obs);
 		
-		obs = new Obstaculo(764, -64, id, 7);
-		obstaculos.add(obs);
+		obs = new ObstaculoDiverso(764, -64, id, 7);
+		obstaculoDiversos.add(obs);
 
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
@@ -146,21 +141,5 @@ public class Mapa2 {
 			e.printStackTrace();
 		}
 
-	}
-
-	public ArrayList<Obstaculo> getObstaculos() {
-		return obstaculos;
-	}
-
-	public Bloco[][] getBlocos() {
-		return blocos;
-	}
-
-	public ArrayList<Vilao> getViloes() {
-		return viloes;
-	}
-
-	public ArrayList<BlocoMovimento> getBlocoMovimento() {
-		return blocoMovimentos;
 	}
 }

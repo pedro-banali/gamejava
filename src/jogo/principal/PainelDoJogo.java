@@ -68,7 +68,7 @@ public class PainelDoJogo extends JPanel implements Runnable, KeyListener{
 			}
 			
 			try {
-				thread.sleep(aguardando);
+				Thread.sleep(aguardando);
 			}
 			catch(Exception e) {
 				

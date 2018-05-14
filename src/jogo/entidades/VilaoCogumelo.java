@@ -1,18 +1,15 @@
 package jogo.entidades;
 
 import java.awt.Graphics;
-import java.awt.Rectangle;
 
-import jogo.estados.Estado;
 import jogo.obstaculos.Bloco;
 import jogo.recursosexternos.Imagem;
 
 public class VilaoCogumelo extends Vilao {
-	private static final long serailVersionUID = 1L;
+
 	private int limiteEsquerda;
 	private int limiteDireita;
 	private int movimento;
-	private int id;
 	private int vida;
 	private double atualVelPulo;
 	private double velPulo;
@@ -22,7 +19,9 @@ public class VilaoCogumelo extends Vilao {
 	private int posicaoInicial;
 	private boolean pulando, caindo;
 
+
 	public VilaoCogumelo(int x, int y, int id, int limiteEsquerda, int limiteDireita) {
+		super();
 		velPulo = 2;
 		atualVelPulo = velPulo;
 		maxVelCaindo = 2;
@@ -32,7 +31,6 @@ public class VilaoCogumelo extends Vilao {
 		caindo = false;
 		movimento = 1;
 		
-		retangulo = new Rectangle();
 		retangulo.setBounds(x, y, Bloco.tamanhoBloco, Bloco.tamanhoBloco);
 		
 		posicaoInicial = retangulo.y;
@@ -45,10 +43,10 @@ public class VilaoCogumelo extends Vilao {
 	}
 
 	public void tick() {
-		if (retangulo.x + retangulo.width - Estado.xOffset >= limiteDireita - Estado.xOffset && movimento != -1) {
+		if (retangulo.x + retangulo.width - camera.getxOffset() >= limiteDireita - camera.getxOffset() && movimento != -1) {
 			movimento *= -1;
 		}
-		if (retangulo.x - Estado.xOffset <= limiteEsquerda - Estado.xOffset && movimento != 1) {
+		if (retangulo.x - camera.getxOffset() <= limiteEsquerda - camera.getxOffset() && movimento != 1) {
 			movimento *= -1;
 		}
 		if(retangulo.y == posicaoInicial)
@@ -78,8 +76,8 @@ public class VilaoCogumelo extends Vilao {
 
 	public void draw(Graphics g) {
 		if (id != 0) {
-			g.drawImage(Imagem.getInstance().getImagens()[4], retangulo.x - (int) Estado.xOffset,
-					retangulo.y - (int) Estado.yOffset, retangulo.width, retangulo.height, null);
+			g.drawImage(Imagem.getInstance().getImagens()[4], retangulo.x - (int) camera.getxOffset(),
+					retangulo.y - (int) camera.getyOffset(), retangulo.width, retangulo.height, null);
 
 		}
 	}
@@ -90,13 +88,5 @@ public class VilaoCogumelo extends Vilao {
 
 	public void setVida(int vida) {
 		this.vida = vida;
-	}
-
-	public int getMovimento() {
-		return movimento;
-	}
-
-	public int getID() {
-		return id;
 	}
 }

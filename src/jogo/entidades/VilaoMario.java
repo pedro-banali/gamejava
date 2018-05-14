@@ -5,13 +5,13 @@ import java.awt.Graphics;
 import jogo.obstaculos.Bloco;
 import jogo.recursosexternos.Imagem;
 
-public class VilaoSouth extends Vilao {
+public class VilaoMario extends Vilao {
 	
 	private int limiteEsquerda;
 	private int limiteDireita;	
 	private int vida;
 
-	public VilaoSouth(int x, int y, int id, int limiteEsquerda, int limiteDireita) {
+	public VilaoMario(int x, int y, int id, int limiteEsquerda, int limiteDireita) {
 		super();
 		vida = 1;
 		movimento = 1;
@@ -37,7 +37,7 @@ public class VilaoSouth extends Vilao {
 
 	public void draw(Graphics g) {
 		if (id != 0) {
-			g.drawImage(Imagem.getInstance().getImagens()[5], retangulo.x - (int) camera.getxOffset(),
+			g.drawImage(Imagem.getInstance().getImagens()[10], retangulo.x - (int) camera.getxOffset(),
 					retangulo.y - (int) camera.getyOffset(), retangulo.width, retangulo.height, null);
 
 		}

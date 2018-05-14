@@ -3,10 +3,18 @@ package jogo.entidades;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
+import jogo.recursosexternos.Camera;
+
 public abstract class Vilao{
 	protected int id;
 	protected int movimento;
 	protected Rectangle retangulo;	
+	protected Camera camera;
+	
+	public Vilao() {
+		camera = Camera.getInstance();
+		retangulo = new Rectangle();
+	}
 
 	public abstract void tick();
 	public abstract void draw(Graphics g);

@@ -7,21 +7,22 @@ import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
-import jogo.estados.Estado;
 import jogo.fisica.Colisao;
 import jogo.modelos.Usuario;
 import jogo.obstaculos.Bloco;
 import jogo.obstaculos.BlocoMovimento;
-import jogo.obstaculos.Obstaculo;
+import jogo.obstaculos.ObstaculoDiverso;
 import jogo.principal.PainelDoJogo;
+import jogo.recursosexternos.Camera;
+import jogo.recursosexternos.Imagem;
 
 public class Player {
-
+	private Camera camera;
 	private boolean right = false;
 	private boolean left = false;
 	private boolean colisaoTopo = false;
 	private Usuario dadosPlayer;
-	private Usuario dadosPlayer2;
+	// private Usuario dadosPlayer2;
 	// limites
 	private double x, y;
 	private int width, height;
@@ -42,7 +43,7 @@ public class Player {
 
 	public Player(int width, int height) {
 		dadosPlayer = new Usuario();
-		dadosPlayer2 = new Usuario();
+		// dadosPlayer2 = new Usuario();
 		velPulo = 5.5;
 		atualVelPulo = velPulo;
 		maxVelCaindo = 5.5;
@@ -53,197 +54,30 @@ public class Player {
 		this.width = width;
 		this.height = height;
 
+		camera = Camera.getInstance();
+
 	}
 
-	public void tick(Bloco[][] b, ArrayList<BlocoMovimento> blocoMovimentos, ArrayList<Vilao> viloes, ArrayList<Obstaculo> obstaculos) {
+	public void tick(Bloco[][] b, ArrayList<BlocoMovimento> blocoMovimentos, ArrayList<Vilao> viloes,
+			ArrayList<ObstaculoDiverso> obstaculoDiversos) {
 
 		int iX = (int) x;
 		int iY = (int) y;
 
-		for (int i = 0; i < b.length; i++) {
-			for (int j = 0; j < b[0].length; j++) {
-				// direita
-				if (Colisao.playerBloco(new Point(iX + width + (int) Estado.xOffset, iY + (int) Estado.yOffset + 2),
-						b[i][j])
-						|| Colisao.playerBloco(
-								new Point(iX + width + (int) Estado.xOffset, iY + height + (int) Estado.yOffset - 1),
-								b[i][j])) {
-					right = false;
-				}
-				// esquerda
-				if (Colisao.playerBloco(new Point(iX + (int) Estado.xOffset - 1, iY + (int) Estado.yOffset + 2),
-						b[i][j])
-						|| Colisao.playerBloco(
-								new Point(iX + (int) Estado.xOffset - 1, iY + height + (int) Estado.yOffset - 1),
-								b[i][j])) {
-					left = false;
-				}
-				// topo
-				if (Colisao.playerBloco(new Point(iX + (int) Estado.xOffset + 1, iY + (int) Estado.yOffset), b[i][j])
-						|| Colisao.playerBloco(
-								new Point(iX + width + (int) Estado.xOffset - 2, iY + (int) Estado.yOffset), b[i][j])) {
-					pulando = false;
-					caindo = true;
-				}
-				// baixo
-				if (Colisao.playerBloco(
-						new Point(iX + (int) Estado.xOffset + 2, iY + height + (int) Estado.yOffset + 1), b[i][j])
-						|| Colisao.playerBloco(new Point(iX + width + (int) Estado.xOffset - 2,
-								iY + height + (int) Estado.yOffset + 1), b[i][j])) {
-					y = b[i][j].getY() - height - Estado.yOffset;
-					caindo = false;
-					colisaoTopo = true;
-				} else {
-					if (!colisaoTopo && !pulando)
-						caindo = true;
-				}
-			}
+		this.validarColisacaoBloco(b, iX, iY);
+		this.validarColisaoBlocoMovimento(blocoMovimentos, iX, iY);
+		this.validarColisaoVilao(viloes, iX, iY);
+		this.validarColisacaoObstaculo(obstaculoDiversos, iX, iY);
 
-		}
-
-		for (int i = 0; i < blocoMovimentos.size(); i++) {
-			BlocoMovimento bloco = blocoMovimentos.get(i);
-			if (bloco.getID() != 0) {
-				if (Colisao.playerBlocoMovimento(
-						new Point(iX + width + (int) Estado.xOffset, iY + (int) Estado.yOffset + 2), bloco)
-						|| Colisao.playerBlocoMovimento(
-								new Point(iX + width + (int) Estado.xOffset, iY + height + (int) Estado.yOffset - 2),
-								bloco)) {
-					right = false;
-					caindo = true;
-				}
-				// esquerda
-				if (Colisao.playerBlocoMovimento(
-						new Point(iX + (int) Estado.xOffset - 1, iY + (int) Estado.yOffset + 2), bloco)
-						|| Colisao.playerBlocoMovimento(
-								new Point(iX + (int) Estado.xOffset - 2, iY + height + (int) Estado.yOffset - 2),
-								bloco)) {
-					left = false;
-					caindo = true;
-				}
-				// topo
-				if (Colisao.playerBlocoMovimento(new Point(iX + (int) Estado.xOffset + 1, iY + (int) Estado.yOffset),
-						bloco)
-						|| Colisao.playerBlocoMovimento(
-								new Point(iX + width + (int) Estado.xOffset - 2, iY + (int) Estado.yOffset), bloco)) {
-					pulando = false;
-					caindo = true;
-				}
-				// baixo
-				if (Colisao.playerBlocoMovimento(
-						new Point(iX + (int) Estado.xOffset + 2, iY + height + (int) Estado.yOffset + 1), bloco)
-						|| Colisao.playerBlocoMovimento(
-								new Point(iX + width + (int) Estado.xOffset, iY + height + (int) Estado.yOffset),
-								bloco)) {
-
-					caindo = false;
-					colisaoTopo = true;
-
-					Estado.xOffset += bloco.getMovimento();
-
-				} else {
-					if (!colisaoTopo && !pulando)
-						caindo = true;
-				}
-			}
-		}
-
-
-		for (int i = 0; i < viloes.size(); i++) {
-			Vilao vilao = viloes.get(i);
-			if (vilao.getID() != 0) {
-				if (Colisao.playerVilao(new Point(iX + width + (int) Estado.xOffset, iY + (int) Estado.yOffset + 2),
-						vilao)
-						|| Colisao.playerVilao(
-								new Point(iX + width + (int) Estado.xOffset, iY + height + (int) Estado.yOffset - 2),
-								vilao)) {
-					right = false;
-					Estado.xOffset = dadosPlayer.getCheckPointX();
-					Estado.yOffset = dadosPlayer.getCheckPointY();
-					dadosPlayer.setVida();
-				}
-				// esquerda
-				if (Colisao.playerVilao(new Point(iX + (int) Estado.xOffset - 1, iY + (int) Estado.yOffset + 2), vilao)
-						|| Colisao.playerVilao(
-								new Point(iX + (int) Estado.xOffset - 2, iY + height + (int) Estado.yOffset - 2),
-								vilao)) {
-					left = false;
-
-				}
-				// topo
-				if (Colisao.playerVilao(new Point(iX + (int) Estado.xOffset + 1, iY + (int) Estado.yOffset), vilao)
-						|| Colisao.playerVilao(
-								new Point(iX + width + (int) Estado.xOffset - 2, iY + (int) Estado.yOffset), vilao)) {
-					pulando = false;
-
-				}
-				// baixo
-				if (Colisao.playerVilao(
-						new Point(iX + (int) Estado.xOffset + 2, iY + height + (int) Estado.yOffset + 1), vilao)
-						|| Colisao.playerVilao(
-								new Point(iX + width + (int) Estado.xOffset, iY + height + (int) Estado.yOffset),
-								vilao)) {
-
-					colisaoTopo = true;
-					if (vilao instanceof VilaoSouth) {
-						vilao.getRetangulo().height = 0;
-						vilao.getRetangulo().width = 0;
-					}
-
-					Estado.xOffset += vilao.getMovimento();
-
-				}
-			}
-		}
-		
-		for (int j = 0; j < obstaculos.size(); j++) {
-			// direita
-			Obstaculo obs = obstaculos.get(j);
-			if (Colisao.playerObstaculo(new Point(iX + width + (int) Estado.xOffset, iY + (int) Estado.yOffset + 2),
-					obs)
-					|| Colisao.playerObstaculo(
-							new Point(iX + width + (int) Estado.xOffset, iY + height + (int) Estado.yOffset - 1),
-							obs)) {
-				right = false;
-			}
-			// esquerda
-			if (Colisao.playerObstaculo(new Point(iX + (int) Estado.xOffset - 1, iY + (int) Estado.yOffset + 2),
-					obs)
-					|| Colisao.playerObstaculo(
-							new Point(iX + (int) Estado.xOffset - 1, iY + height + (int) Estado.yOffset - 1),
-							obs)) {
-				left = false;
-			}
-			// topo
-			if (Colisao.playerObstaculo(new Point(iX + (int) Estado.xOffset + 1, iY + (int) Estado.yOffset), obs)
-					|| Colisao.playerObstaculo(
-							new Point(iX + width + (int) Estado.xOffset - 2, iY + (int) Estado.yOffset), obs)) {
-				pulando = false;
-				caindo = true;
-			}
-			// baixo
-			if (Colisao.playerObstaculo(
-					new Point(iX + (int) Estado.xOffset + 2, iY + height + (int) Estado.yOffset + 1), obs)
-					|| Colisao.playerObstaculo(new Point(iX + width + (int) Estado.xOffset - 2,
-							iY + height + (int) Estado.yOffset + 1), obs)) {
-				y = obs.getY() - height - Estado.yOffset;
-				caindo = false;
-				colisaoTopo = true;
-			} else {
-				if (!colisaoTopo && !pulando)
-					caindo = true;
-			}
-		}
-		
 		colisaoTopo = false;
 
 		if (right) {
-			Estado.xOffset += velocidadeDeMovimento;
+			camera.setxOffset(camera.getxOffset() + velocidadeDeMovimento);
 		} else if (left) {
-			Estado.xOffset -= velocidadeDeMovimento;
+			camera.setxOffset(camera.getxOffset() - velocidadeDeMovimento);
 		}
 		if (pulando) {
-			Estado.yOffset -= atualVelPulo;
+			camera.setyOffset(camera.getyOffset() - atualVelPulo);
 			atualVelPulo -= 0.1;
 			if (atualVelPulo <= 0) {
 				atualVelPulo = velPulo;
@@ -251,7 +85,7 @@ public class Player {
 				caindo = true;
 			}
 		} else if (caindo) {
-			Estado.yOffset += atualVelCaindo;
+			camera.setyOffset(camera.getyOffset() + atualVelCaindo);
 			if (atualVelCaindo < maxVelCaindo) {
 				atualVelCaindo += 0.1;
 			}
@@ -263,10 +97,12 @@ public class Player {
 	}
 
 	public void draw(Graphics g) {
-		g.setColor(Color.BLACK);
+		//g.setColor(Color.BLACK);
 		g.setFont(new Font("Arial", Font.PLAIN, 32));
 		g.drawString("Vidas: " + dadosPlayer.getVida(), (int) (x - 400), (int) (y - 150));
-		g.fillRect((int) x, (int) y, width, height);
+//		g.fillRect((int) x, (int) y, width, height);
+		g.drawImage(Imagem.getInstance().getImagens()[12], (int)x,
+				(int)y, width, height, null);
 
 	}
 
@@ -293,7 +129,192 @@ public class Player {
 	}
 
 	public void getCheckpoint() {
-		Estado.xOffset = dadosPlayer.getCheckPointX();
-		Estado.yOffset = dadosPlayer.getCheckPointY();
+		camera.setxOffset(dadosPlayer.getCheckPointX());
+		camera.setyOffset(dadosPlayer.getCheckPointY());
 	}
+	
+	private void validarColisacaoObstaculo(ArrayList<ObstaculoDiverso> obstaculoDiversos, int iX, int iY) {
+		for (int j = 0; j < obstaculoDiversos.size(); j++) {
+			// direita
+			ObstaculoDiverso obs = obstaculoDiversos.get(j);
+			if (Colisao.playerObstaculo(
+					new Point(iX + width + (int) camera.getxOffset(), iY + (int) camera.getyOffset() + 2), obs)
+					|| Colisao.playerObstaculo(new Point(iX + width + (int) camera.getxOffset(),
+							iY + height + (int) camera.getyOffset() - 1), obs)) {
+				right = false;
+			}
+			// esquerda
+			if (Colisao.playerObstaculo(
+					new Point(iX + (int) camera.getxOffset() - 1, iY + (int) camera.getyOffset() + 2), obs)
+					|| Colisao.playerObstaculo(
+							new Point(iX + (int) camera.getxOffset() - 1, iY + height + (int) camera.getyOffset() - 1),
+							obs)) {
+				left = false;
+			}
+			// topo
+			if (Colisao.playerObstaculo(new Point(iX + (int) camera.getxOffset() + 1, iY + (int) camera.getyOffset()),
+					obs)
+					|| Colisao.playerObstaculo(
+							new Point(iX + width + (int) camera.getxOffset() - 2, iY + (int) camera.getyOffset()),
+							obs)) {
+				pulando = false;
+				caindo = true;
+			}
+			// baixo
+			if (Colisao.playerObstaculo(
+					new Point(iX + (int) camera.getxOffset() + 2, iY + height + (int) camera.getyOffset() + 1), obs)
+					|| Colisao.playerObstaculo(new Point(iX + width + (int) camera.getxOffset() - 2,
+							iY + height + (int) camera.getyOffset() + 1), obs)) {
+				y = obs.getRetangulo().getY() - height - camera.getyOffset();
+				caindo = false;
+				colisaoTopo = true;
+			} else {
+				if (!colisaoTopo && !pulando)
+					caindo = true;
+			}
+		}		
+	}
+
+	private void validarColisaoVilao(ArrayList<Vilao> viloes, int iX, int iY) {
+		for (int i = 0; i < viloes.size(); i++) {
+			Vilao vilao = viloes.get(i);
+			if (vilao.getID() != 0) {
+				if (Colisao.playerVilao(
+						new Point(iX + width + (int) camera.getxOffset(), iY + (int) camera.getyOffset() + 2), vilao)
+						|| Colisao.playerVilao(new Point(iX + width + (int) camera.getxOffset(),
+								iY + height + (int) camera.getyOffset() - 2), vilao)) {
+					right = false;
+					camera.setxOffset(dadosPlayer.getCheckPointX());
+					camera.setyOffset(dadosPlayer.getCheckPointY());
+					dadosPlayer.setVida();
+				}
+				// esquerda
+				if (Colisao.playerVilao(
+						new Point(iX + (int) camera.getxOffset() - 1, iY + (int) camera.getyOffset() + 2), vilao)
+						|| Colisao.playerVilao(new Point(iX + (int) camera.getxOffset() - 2,
+								iY + height + (int) camera.getyOffset() - 2), vilao)) {
+					left = false;
+
+				}
+				// topo
+				if (Colisao.playerVilao(new Point(iX + (int) camera.getxOffset() + 1, iY + (int) camera.getyOffset()),
+						vilao)
+						|| Colisao.playerVilao(
+								new Point(iX + width + (int) camera.getxOffset() - 2, iY + (int) camera.getyOffset()),
+								vilao)) {
+					pulando = false;
+
+				}
+				// baixo
+				if (Colisao
+						.playerVilao(new Point(iX + (int) camera.getxOffset() + 2,
+								iY + height + (int) camera.getyOffset() + 1), vilao)
+						|| Colisao.playerVilao(new Point(iX + width + (int) camera.getxOffset(),
+								iY + height + (int) camera.getyOffset()), vilao)) {
+
+					colisaoTopo = true;
+					if (vilao instanceof VilaoSouth) {
+						vilao.getRetangulo().height = 0;
+						vilao.getRetangulo().width = 0;
+					}
+
+					camera.setxOffset(camera.getxOffset() + vilao.getMovimento());
+
+				}
+			}
+		}
+	}
+
+	private void validarColisaoBlocoMovimento(ArrayList<BlocoMovimento> blocoMovimentos, int iX, int iY) {
+		for (int i = 0; i < blocoMovimentos.size(); i++) {
+			BlocoMovimento bloco = blocoMovimentos.get(i);
+			if (bloco.getID() != 0) {
+				if (Colisao.playerObstaculo(
+						new Point(iX + width + (int) camera.getxOffset(), iY + (int) camera.getyOffset() + 2), bloco)
+						|| Colisao.playerObstaculo(new Point(iX + width + (int) camera.getxOffset(),
+								iY + height + (int) camera.getyOffset() - 2), bloco)) {
+					right = false;
+					caindo = true;
+				}
+				// esquerda
+				if (Colisao.playerObstaculo(
+						new Point(iX + (int) camera.getxOffset() - 1, iY + (int) camera.getyOffset() + 2), bloco)
+						|| Colisao.playerObstaculo(new Point(iX + (int) camera.getxOffset() - 2,
+								iY + height + (int) camera.getyOffset() - 2), bloco)) {
+					left = false;
+					caindo = true;
+				}
+				// topo
+				if (Colisao.playerObstaculo(
+						new Point(iX + (int) camera.getxOffset() + 1, iY + (int) camera.getyOffset()), bloco)
+						|| Colisao.playerObstaculo(
+								new Point(iX + width + (int) camera.getxOffset() - 2, iY + (int) camera.getyOffset()),
+								bloco)) {
+					pulando = false;
+					caindo = true;
+				}
+				// baixo
+				if (Colisao
+						.playerObstaculo(new Point(iX + (int) camera.getxOffset() + 2,
+								iY + height + (int) camera.getyOffset() + 1), bloco)
+						|| Colisao.playerObstaculo(new Point(iX + width + (int) camera.getxOffset(),
+								iY + height + (int) camera.getyOffset()), bloco)) {
+
+					caindo = false;
+					colisaoTopo = true;
+
+					camera.setxOffset(camera.getxOffset() + bloco.getMovimento());
+
+				} else {
+					if (!colisaoTopo && !pulando)
+						caindo = true;
+				}
+			}
+		}
+		
+	}
+	
+	public void validarColisacaoBloco(Bloco[][] b, int iX, int iY) {
+		for (int i = 0; i < b.length; i++) {
+			for (int j = 0; j < b[0].length; j++) {
+				// direita
+				if (Colisao.playerObstaculo(
+						new Point(iX + width + (int) camera.getxOffset(), iY + (int) camera.getyOffset() + 2), b[i][j])
+						|| Colisao.playerObstaculo(new Point(iX + width + (int) camera.getxOffset(),
+								iY + height + (int) camera.getyOffset() - 1), b[i][j])) {
+					right = false;
+				}
+				// esquerda
+				if (Colisao.playerObstaculo(
+						new Point(iX + (int) camera.getxOffset() - 1, iY + (int) camera.getyOffset() + 2), b[i][j])
+						|| Colisao.playerObstaculo(new Point(iX + (int) camera.getxOffset() - 1,
+								iY + height + (int) camera.getyOffset() - 1), b[i][j])) {
+					left = false;
+				}
+				// topo
+				if (Colisao.playerObstaculo(
+						new Point(iX + (int) camera.getxOffset() + 1, iY + (int) camera.getyOffset()), b[i][j])
+						|| Colisao.playerObstaculo(
+								new Point(iX + width + (int) camera.getxOffset() - 2, iY + (int) camera.getyOffset()),
+								b[i][j])) {
+					pulando = false;
+					caindo = true;
+				}
+				// baixo
+				if (Colisao
+						.playerObstaculo(new Point(iX + (int) camera.getxOffset() + 2,
+								iY + height + (int) camera.getyOffset() + 1), b[i][j])
+						|| Colisao.playerObstaculo(new Point(iX + width + (int) camera.getxOffset() - 2,
+								iY + height + (int) camera.getyOffset() + 1), b[i][j])) {
+					y = b[i][j].getRetangulo().getY() - height - camera.getyOffset();
+					caindo = false;
+					colisaoTopo = true;
+				} else {
+					if (!colisaoTopo && !pulando)
+						caindo = true;
+				}
+			}
+		}
+	}
+
 }

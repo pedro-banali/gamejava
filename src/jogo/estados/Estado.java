@@ -2,15 +2,17 @@ package jogo.estados;
 
 import java.awt.Graphics;
 
+import jogo.recursosexternos.Camera;
+
 public abstract class Estado {
 	protected GerenciadorDeEstado gerenciadorDeEstado;
-	public static double xOffset, yOffset;
+//	public static double xOffset, yOffset;
+	protected Camera camera;
 	public Estado(GerenciadorDeEstado gerenciadorDeEstado) {
 		this.gerenciadorDeEstado = gerenciadorDeEstado;
-		
-		xOffset = 0;
-		yOffset = 0;
-		
+		camera = Camera.getInstance();
+		camera.setxOffset(0);
+		camera.setyOffset(0); 		
 		inicializar();
 	}
 	

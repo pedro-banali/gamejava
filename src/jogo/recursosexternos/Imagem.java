@@ -11,7 +11,7 @@ public class Imagem {
 	private static Imagem instance;
 	
 	private Imagem() {
-		imagens = new BufferedImage[12];
+		imagens = new BufferedImage[13];
 		try {
 			imagens[0] = carregarImagem("/blocks/bloco64.png");
 			imagens[1] = carregarImagem("/blocks/obstaculos/blocodegelo64.png");
@@ -25,6 +25,7 @@ public class Imagem {
 			imagens[9] = carregarImagem("/blocks/inimigos/google64.png");
 			imagens[10] = carregarImagem("/blocks/inimigos/mario64.png");
 			imagens[11] = carregarImagem("/blocks/inimigos/chefao.png");
+			imagens[12] = carregarImagem("/blocks/bixodoido30.png");
 						
 		}catch (IOException e) {
 			e.printStackTrace();
