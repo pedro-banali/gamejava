@@ -22,7 +22,7 @@ public class Imagem {
 			imagens[6] = carregarImagem("/blocks/obstaculos/vida64.png");
 			imagens[7] = carregarImagem("/blocks/obstaculos/espinhudo64.png");
 			imagens[8] = carregarImagem("/blocks/inimigos/goomba64.png");
-			imagens[9] = carregarImagem("/blocks/inimigos/google64.png");
+			imagens[9] = carregarImagem("/blocks/inimigos/flappy64.png");
 			imagens[10] = carregarImagem("/blocks/inimigos/mario64.png");
 			imagens[11] = carregarImagem("/blocks/inimigos/chefao.png");
 			imagens[12] = carregarImagem("/blocks/bixodoido30.png");

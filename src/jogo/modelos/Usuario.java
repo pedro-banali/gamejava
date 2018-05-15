@@ -7,9 +7,17 @@ public class Usuario {
 	private int checkPointY;
 	private int pontos;
 	private int vida = 0;
+	private int mapa;
 	
 	public Usuario() {
 		this.vida = 3;
+		this.mapa = 1;
+		this.pontos = 0;
+	}
+	
+	public void salvarPontos()
+	{
+		System.out.println("Nome: " + nome + "Pontos: " + pontos);
 	}
 	
 	public String getNome() {
@@ -34,13 +42,21 @@ public class Usuario {
 		return pontos;
 	}
 	public void setPontos(int pontos) {
-		this.pontos = pontos;
+		this.pontos += pontos;
 	}
 	public int getVida() {
 		return vida;
 	}
 	public void setVida() {
 		this.vida--;
+	}
+
+	public int getMapa() {
+		return mapa;
+	}
+
+	public void setMapa(int mapa) {
+		this.mapa = mapa;
 	}
 
 }

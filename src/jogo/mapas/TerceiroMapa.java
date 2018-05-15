@@ -8,9 +8,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import jogo.entidades.Vilao;
-import jogo.entidades.VilaoBola;
-import jogo.entidades.VilaoCogumelo;
-import jogo.entidades.VilaoSouth;
+import jogo.entidades.VilaoChefao;
 import jogo.obstaculos.Bloco;
 import jogo.obstaculos.BlocoMovimento;
 import jogo.obstaculos.ObstaculoDiverso;
@@ -34,6 +32,10 @@ public class TerceiroMapa extends Mapa {
 		}
 		for (int i = 0; i < viloes.size(); i++) {
 			viloes.get(i).tick();
+		}
+		if(camera.getxOffset() >= 3336)
+		{
+			this.setMapaFinalizado();
 		}
 	}
 
@@ -103,35 +105,12 @@ public class TerceiroMapa extends Mapa {
 				line = br.readLine();
 				String[] tokens = line.split("\\s+");
 				if (i < 1) {
-					viloes.add(new VilaoBola(Integer.parseInt(tokens[0]) * Bloco.tamanhoBloco,
-							Integer.parseInt(tokens[1]) * Bloco.tamanhoBloco, Integer.parseInt(tokens[2]),
-							Integer.parseInt(tokens[3]) * Bloco.tamanhoBloco,
-							Integer.parseInt(tokens[4]) * Bloco.tamanhoBloco));
-				} else if (i == 1) {
-					viloes.add(new VilaoCogumelo(Integer.parseInt(tokens[0]) * Bloco.tamanhoBloco,
-							Integer.parseInt(tokens[1]) * Bloco.tamanhoBloco, Integer.parseInt(tokens[2]),
-							Integer.parseInt(tokens[3]) * Bloco.tamanhoBloco,
-							Integer.parseInt(tokens[4]) * Bloco.tamanhoBloco));
-
-				} else {
-					viloes.add(new VilaoSouth(Integer.parseInt(tokens[0]) * Bloco.tamanhoBloco,
+					viloes.add(new VilaoChefao(Integer.parseInt(tokens[0]) * Bloco.tamanhoBloco,
 							Integer.parseInt(tokens[1]) * Bloco.tamanhoBloco, Integer.parseInt(tokens[2]),
 							Integer.parseInt(tokens[3]) * Bloco.tamanhoBloco,
 							Integer.parseInt(tokens[4]) * Bloco.tamanhoBloco));
 				}
 			}
-
-		ObstaculoDiverso obs = new ObstaculoDiverso(2560, -0, id, 2);
-		obstaculoDiversos.add(obs);
-		
-		obs = new ObstaculoDiverso(2560, -64, id, 2);
-		obstaculoDiversos.add(obs);
-		
-		obs = new ObstaculoDiverso(260, 0, id, 6);
-		obstaculoDiversos.add(obs);
-		
-		obs = new ObstaculoDiverso(764, -64, id, 7);
-		obstaculoDiversos.add(obs);
 
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block

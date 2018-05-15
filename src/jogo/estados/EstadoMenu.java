@@ -5,6 +5,8 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 
+import javax.swing.JOptionPane;
+
 import jogo.principal.PainelDoJogo;
 
 public class EstadoMenu extends Estado {
@@ -65,8 +67,8 @@ public class EstadoMenu extends Estado {
 		
 		if(k == KeyEvent.VK_ENTER) {
 			if(currentSelection == 0) {
-				
-				gerenciadorDeEstado.getEstados().push(new Fase(gerenciadorDeEstado));
+				String nome = JOptionPane.showInputDialog("Digite um nome");
+				gerenciadorDeEstado.getEstados().push(new Fase(gerenciadorDeEstado , nome));
 				
 			}else if(currentSelection == 1) {
 				

@@ -35,6 +35,11 @@ public class PrimeiroMapa extends Mapa {
 		for (int i = 0; i < viloes.size(); i++) {
 			viloes.get(i).tick();
 		}
+		if(camera.getxOffset() >= 3454)
+		{
+			this.setMapaFinalizado();
+			camera.setxOffset(-300);
+		}
 	}
 
 	public void draw(Graphics g) {

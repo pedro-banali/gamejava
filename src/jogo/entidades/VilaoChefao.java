@@ -12,7 +12,7 @@ public class VilaoChefao extends Vilao {
 
 	public VilaoChefao(int x, int y, int id, int limiteEsquerda, int limiteDireita) {
 		super();
-		vida = 1;
+		vida = 3;
 		movimento = 1;
 		retangulo.setBounds(x, y, 100, 100);
 		
@@ -31,7 +31,7 @@ public class VilaoChefao extends Vilao {
 		}
 
 
-		retangulo.x += getMovimento() * 2;
+		retangulo.x += getMovimento();
 	}
 
 	public void draw(Graphics g) {
@@ -46,7 +46,7 @@ public class VilaoChefao extends Vilao {
 		return vida;
 	}
 
-	public void setVida(int vida) {
-		this.vida = vida;
+	public void setVida() {
+		this.vida--;
 	}
 }

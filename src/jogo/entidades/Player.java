@@ -1,11 +1,12 @@
 package jogo.entidades;
 
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
 
 import jogo.fisica.Colisao;
 import jogo.modelos.Usuario;
@@ -40,9 +41,12 @@ public class Player {
 	// velocidade ao cair
 	private double maxVelCaindo;
 	private double atualVelCaindo;
+	private boolean matouChefao = false;
+
 
 	public Player(int width, int height) {
 		dadosPlayer = new Usuario();
+		
 		// dadosPlayer2 = new Usuario();
 		velPulo = 5.5;
 		atualVelPulo = velPulo;
@@ -55,7 +59,6 @@ public class Player {
 		this.height = height;
 
 		camera = Camera.getInstance();
-
 	}
 
 	public void tick(Bloco[][] b, ArrayList<BlocoMovimento> blocoMovimentos, ArrayList<Vilao> viloes,
@@ -100,6 +103,8 @@ public class Player {
 		//g.setColor(Color.BLACK);
 		g.setFont(new Font("Arial", Font.PLAIN, 32));
 		g.drawString("Vidas: " + dadosPlayer.getVida(), (int) (x - 400), (int) (y - 150));
+		g.setFont(new Font("Arial", Font.PLAIN, 32));
+		g.drawString("Pontos: " + dadosPlayer.getPontos(), (int) (x - 400), (int) (y - 100));
 //		g.fillRect((int) x, (int) y, width, height);
 		g.drawImage(Imagem.getInstance().getImagens()[12], (int)x,
 				(int)y, width, height, null);
@@ -131,6 +136,43 @@ public class Player {
 	public void getCheckpoint() {
 		camera.setxOffset(dadosPlayer.getCheckPointX());
 		camera.setyOffset(dadosPlayer.getCheckPointY());
+	}
+	
+	public void setMapa(int mapa) {
+		dadosPlayer.setMapa(mapa);
+	}
+	
+	public int getMapa() {
+		return dadosPlayer.getMapa();
+	}
+	
+	public void setPontos(int ponto) {
+		dadosPlayer.setPontos(ponto);
+	}
+	
+	public int getPontos() {
+		return dadosPlayer.getPontos();
+	}
+	
+	public int getVida() {
+		return dadosPlayer.getVida();
+	}
+	
+	public boolean getMatouChefao() {
+		return matouChefao;
+	}
+	
+	public void setVida() {
+		dadosPlayer.setVida();
+	}
+	
+	public void salvarPontos() {
+		dadosPlayer.salvarPontos();
+	}
+	
+	public void setNome(String nome)
+	{
+		dadosPlayer.setNome(nome);
 	}
 	
 	private void validarColisacaoObstaculo(ArrayList<ObstaculoDiverso> obstaculoDiversos, int iX, int iY) {
@@ -213,10 +255,31 @@ public class Player {
 								iY + height + (int) camera.getyOffset()), vilao)) {
 
 					colisaoTopo = true;
-					if (vilao instanceof VilaoSouth) {
+					if (vilao instanceof VilaoSouth || 
+							vilao instanceof VilaoGoomba || 
+							vilao instanceof VilaoFlappy ||
+							vilao instanceof VilaoMario) {
 						vilao.getRetangulo().height = 0;
 						vilao.getRetangulo().width = 0;
+						
+						this.setPontos(20);
 					}
+					
+					colisaoTopo = true;
+					if (vilao instanceof VilaoChefao) {
+						if(((VilaoChefao) vilao).getVida() == 0) 
+						{
+							vilao.getRetangulo().height = 0;
+							vilao.getRetangulo().width = 0;
+							matouChefao = true;
+							JOptionPane.showMessageDialog(null, "Parabéns você zerou este lindissimo jogo :)", "You're are a champion", 1);
+							
+						}
+						camera.setxOffset(-400);
+						((VilaoChefao) vilao).setVida();
+						this.setPontos(20);
+					}
+
 
 					camera.setxOffset(camera.getxOffset() + vilao.getMovimento());
 

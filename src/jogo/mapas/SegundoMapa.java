@@ -9,8 +9,9 @@ import java.util.ArrayList;
 
 import jogo.entidades.Vilao;
 import jogo.entidades.VilaoBola;
-import jogo.entidades.VilaoCogumelo;
-import jogo.entidades.VilaoSouth;
+import jogo.entidades.VilaoFlappy;
+import jogo.entidades.VilaoGoomba;
+import jogo.entidades.VilaoMario;
 import jogo.obstaculos.Bloco;
 import jogo.obstaculos.BlocoMovimento;
 import jogo.obstaculos.ObstaculoDiverso;
@@ -24,7 +25,6 @@ public class SegundoMapa extends Mapa {
 		viloes = new ArrayList<Vilao>();
 		blocos = new Bloco[height][width];
 		obstaculoDiversos = new ArrayList<ObstaculoDiverso>();
-
 		carregarMapa();
 	}
 
@@ -34,6 +34,11 @@ public class SegundoMapa extends Mapa {
 		}
 		for (int i = 0; i < viloes.size(); i++) {
 			viloes.get(i).tick();
+		}
+		if(camera.getxOffset() >= 3336)
+		{
+			this.setMapaFinalizado();
+			camera.setxOffset(-400);
 		}
 	}
 
@@ -108,13 +113,19 @@ public class SegundoMapa extends Mapa {
 							Integer.parseInt(tokens[3]) * Bloco.tamanhoBloco,
 							Integer.parseInt(tokens[4]) * Bloco.tamanhoBloco));
 				} else if (i == 1) {
-					viloes.add(new VilaoCogumelo(Integer.parseInt(tokens[0]) * Bloco.tamanhoBloco,
+					viloes.add(new VilaoFlappy(Integer.parseInt(tokens[0]) * Bloco.tamanhoBloco,
 							Integer.parseInt(tokens[1]) * Bloco.tamanhoBloco, Integer.parseInt(tokens[2]),
 							Integer.parseInt(tokens[3]) * Bloco.tamanhoBloco,
 							Integer.parseInt(tokens[4]) * Bloco.tamanhoBloco));
 
-				} else {
-					viloes.add(new VilaoSouth(Integer.parseInt(tokens[0]) * Bloco.tamanhoBloco,
+				} else if(i == 2) {
+					viloes.add(new VilaoMario(Integer.parseInt(tokens[0]) * Bloco.tamanhoBloco,
+							Integer.parseInt(tokens[1]) * Bloco.tamanhoBloco, Integer.parseInt(tokens[2]),
+							Integer.parseInt(tokens[3]) * Bloco.tamanhoBloco,
+							Integer.parseInt(tokens[4]) * Bloco.tamanhoBloco));
+				}
+				else {
+					viloes.add(new VilaoGoomba(Integer.parseInt(tokens[0]) * Bloco.tamanhoBloco,
 							Integer.parseInt(tokens[1]) * Bloco.tamanhoBloco, Integer.parseInt(tokens[2]),
 							Integer.parseInt(tokens[3]) * Bloco.tamanhoBloco,
 							Integer.parseInt(tokens[4]) * Bloco.tamanhoBloco));
