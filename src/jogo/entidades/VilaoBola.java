@@ -5,7 +5,7 @@ import java.awt.Graphics;
 import jogo.obstaculos.Bloco;
 import jogo.recursosexternos.Imagem;
 
-public class VilaoBola extends Vilao{
+public class VilaoBola extends Personagem{
 
 	private int limiteEsquerda;
 	private int limiteDireita;

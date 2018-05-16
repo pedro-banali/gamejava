@@ -7,11 +7,13 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.JOptionPane;
 
+import jogo.DAO.RankingDAOTxt;
+import jogo.modelos.Ranking;
 import jogo.principal.PainelDoJogo;
 
 public class EstadoMenu extends Estado {
 	
-	private String[] opcoes = {"Iniciar", "Help", "Quit"};
+	private String[] opcoes = {"Iniciar", "Ranking", "Quit"};
 	private int currentSelection = 0;
 	
 	public EstadoMenu(GerenciadorDeEstado gerenciadorDeEstado) {
@@ -70,9 +72,14 @@ public class EstadoMenu extends Estado {
 				String nome = JOptionPane.showInputDialog("Digite um nome");
 				gerenciadorDeEstado.getEstados().push(new Fase(gerenciadorDeEstado , nome));
 				
-			}else if(currentSelection == 1) {
+			}
+			else if(currentSelection == 1) {
+				new RankingDAOTxt().ler();
+				String message = Ranking.getInstance().getRankingFormatado();
 				
-			}else if (currentSelection == 2) {
+				JOptionPane.showMessageDialog(null, message, "Ranking atual", 1);
+			}
+			else if (currentSelection == 2) {
 				System.exit(0);
 			}
 		}

@@ -17,7 +17,7 @@ import jogo.principal.PainelDoJogo;
 import jogo.recursosexternos.Camera;
 import jogo.recursosexternos.Imagem;
 
-public class Player {
+public class Player extends Personagem {
 	private Camera camera;
 	private boolean right = false;
 	private boolean left = false;
@@ -42,11 +42,19 @@ public class Player {
 	private double maxVelCaindo;
 	private double atualVelCaindo;
 	private boolean matouChefao = false;
+	private Bloco[][] blocos;
+	private ArrayList<BlocoMovimento> blocoMovimentos;
+	private ArrayList<Personagem> viloes;
+	private ArrayList<ObstaculoDiverso> obstaculoDiversos;
 
-
-	public Player(int width, int height) {
+	public Player(int width, int height, Bloco[][] b, ArrayList<BlocoMovimento> blocoMovimentos,
+					ArrayList<Personagem> viloes,
+					ArrayList<ObstaculoDiverso> obstaculoDiversos) {
 		dadosPlayer = new Usuario();
-		
+		this.blocos = b;
+		this.blocoMovimentos = blocoMovimentos;
+		this.viloes = viloes;
+		this.obstaculoDiversos = obstaculoDiversos;
 		// dadosPlayer2 = new Usuario();
 		velPulo = 5.5;
 		atualVelPulo = velPulo;
@@ -61,13 +69,12 @@ public class Player {
 		camera = Camera.getInstance();
 	}
 
-	public void tick(Bloco[][] b, ArrayList<BlocoMovimento> blocoMovimentos, ArrayList<Vilao> viloes,
-			ArrayList<ObstaculoDiverso> obstaculoDiversos) {
+	public void tick() {
 
 		int iX = (int) x;
 		int iY = (int) y;
 
-		this.validarColisacaoBloco(b, iX, iY);
+		this.validarColisacaoBloco(blocos, iX, iY);
 		this.validarColisaoBlocoMovimento(blocoMovimentos, iX, iY);
 		this.validarColisaoVilao(viloes, iX, iY);
 		this.validarColisacaoObstaculo(obstaculoDiversos, iX, iY);
@@ -128,52 +135,47 @@ public class Player {
 			left = false;
 	}
 
-	public void setCheckpoint(int x) {
-		dadosPlayer.setCheckPointX(x);
-		dadosPlayer.setCheckPointY(-300);
+	public Bloco[][] getBlocos() {
+		return blocos;
 	}
 
-	public void getCheckpoint() {
-		camera.setxOffset(dadosPlayer.getCheckPointX());
-		camera.setyOffset(dadosPlayer.getCheckPointY());
+	public void setBlocos(Bloco[][] blocos) {
+		this.blocos = blocos;
+	}
+
+	public ArrayList<BlocoMovimento> getBlocoMovimentos() {
+		return blocoMovimentos;
+	}
+
+	public void setBlocoMovimentos(ArrayList<BlocoMovimento> blocoMovimentos) {
+		this.blocoMovimentos = blocoMovimentos;
+	}
+
+	public ArrayList<Personagem> getViloes() {
+		return viloes;
+	}
+
+	public void setViloes(ArrayList<Personagem> viloes) {
+		this.viloes = viloes;
+	}
+
+	public ArrayList<ObstaculoDiverso> getObstaculoDiversos() {
+		return obstaculoDiversos;
+	}
+
+	public void setObstaculoDiversos(ArrayList<ObstaculoDiverso> obstaculoDiversos) {
+		this.obstaculoDiversos = obstaculoDiversos;
 	}
 	
-	public void setMapa(int mapa) {
-		dadosPlayer.setMapa(mapa);
-	}
-	
-	public int getMapa() {
-		return dadosPlayer.getMapa();
-	}
-	
-	public void setPontos(int ponto) {
-		dadosPlayer.setPontos(ponto);
-	}
-	
-	public int getPontos() {
-		return dadosPlayer.getPontos();
-	}
-	
-	public int getVida() {
-		return dadosPlayer.getVida();
+	public Usuario getDadosPlayer() {
+		return dadosPlayer;
 	}
 	
 	public boolean getMatouChefao() {
 		return matouChefao;
 	}
 	
-	public void setVida() {
-		dadosPlayer.setVida();
-	}
-	
-	public void salvarPontos() {
-		dadosPlayer.salvarPontos();
-	}
-	
-	public void setNome(String nome)
-	{
-		dadosPlayer.setNome(nome);
-	}
+
 	
 	private void validarColisacaoObstaculo(ArrayList<ObstaculoDiverso> obstaculoDiversos, int iX, int iY) {
 		for (int j = 0; j < obstaculoDiversos.size(); j++) {
@@ -217,14 +219,14 @@ public class Player {
 		}		
 	}
 
-	private void validarColisaoVilao(ArrayList<Vilao> viloes, int iX, int iY) {
+	private void validarColisaoVilao(ArrayList<Personagem> viloes, int iX, int iY) {
 		for (int i = 0; i < viloes.size(); i++) {
-			Vilao vilao = viloes.get(i);
-			if (vilao.getID() != 0) {
+			Personagem personagem = viloes.get(i);
+			if (personagem.getID() != 0) {
 				if (Colisao.playerVilao(
-						new Point(iX + width + (int) camera.getxOffset(), iY + (int) camera.getyOffset() + 2), vilao)
+						new Point(iX + width + (int) camera.getxOffset(), iY + (int) camera.getyOffset() + 2), personagem)
 						|| Colisao.playerVilao(new Point(iX + width + (int) camera.getxOffset(),
-								iY + height + (int) camera.getyOffset() - 2), vilao)) {
+								iY + height + (int) camera.getyOffset() - 2), personagem)) {
 					right = false;
 					camera.setxOffset(dadosPlayer.getCheckPointX());
 					camera.setyOffset(dadosPlayer.getCheckPointY());
@@ -232,56 +234,56 @@ public class Player {
 				}
 				// esquerda
 				if (Colisao.playerVilao(
-						new Point(iX + (int) camera.getxOffset() - 1, iY + (int) camera.getyOffset() + 2), vilao)
+						new Point(iX + (int) camera.getxOffset() - 1, iY + (int) camera.getyOffset() + 2), personagem)
 						|| Colisao.playerVilao(new Point(iX + (int) camera.getxOffset() - 2,
-								iY + height + (int) camera.getyOffset() - 2), vilao)) {
+								iY + height + (int) camera.getyOffset() - 2), personagem)) {
 					left = false;
 
 				}
 				// topo
 				if (Colisao.playerVilao(new Point(iX + (int) camera.getxOffset() + 1, iY + (int) camera.getyOffset()),
-						vilao)
+						personagem)
 						|| Colisao.playerVilao(
 								new Point(iX + width + (int) camera.getxOffset() - 2, iY + (int) camera.getyOffset()),
-								vilao)) {
+								personagem)) {
 					pulando = false;
 
 				}
 				// baixo
 				if (Colisao
 						.playerVilao(new Point(iX + (int) camera.getxOffset() + 2,
-								iY + height + (int) camera.getyOffset() + 1), vilao)
+								iY + height + (int) camera.getyOffset() + 1), personagem)
 						|| Colisao.playerVilao(new Point(iX + width + (int) camera.getxOffset(),
-								iY + height + (int) camera.getyOffset()), vilao)) {
+								iY + height + (int) camera.getyOffset()), personagem)) {
 
 					colisaoTopo = true;
-					if (vilao instanceof VilaoSouth || 
-							vilao instanceof VilaoGoomba || 
-							vilao instanceof VilaoFlappy ||
-							vilao instanceof VilaoMario) {
-						vilao.getRetangulo().height = 0;
-						vilao.getRetangulo().width = 0;
+					if (personagem instanceof VilaoSouth || 
+							personagem instanceof VilaoGoomba || 
+							personagem instanceof VilaoFlappy ||
+							personagem instanceof VilaoMario) {
+						personagem.getRetangulo().height = 0;
+						personagem.getRetangulo().width = 0;
 						
-						this.setPontos(20);
+						this.dadosPlayer.setPontos(20);
 					}
 					
 					colisaoTopo = true;
-					if (vilao instanceof VilaoChefao) {
-						if(((VilaoChefao) vilao).getVida() == 0) 
+					if (personagem instanceof VilaoChefao) {
+						if(((VilaoChefao) personagem).getVida() == 0) 
 						{
-							vilao.getRetangulo().height = 0;
-							vilao.getRetangulo().width = 0;
+							personagem.getRetangulo().height = 0;
+							personagem.getRetangulo().width = 0;
 							matouChefao = true;
 							JOptionPane.showMessageDialog(null, "Parabéns você zerou este lindissimo jogo :)", "You're are a champion", 1);
 							
 						}
 						camera.setxOffset(-400);
-						((VilaoChefao) vilao).setVida();
-						this.setPontos(20);
+						((VilaoChefao) personagem).setVida();
+						this.dadosPlayer.setPontos(20);
 					}
 
 
-					camera.setxOffset(camera.getxOffset() + vilao.getMovimento());
+					camera.setxOffset(camera.getxOffset() + personagem.getMovimento());
 
 				}
 			}

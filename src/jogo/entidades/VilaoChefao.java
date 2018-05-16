@@ -4,7 +4,7 @@ import java.awt.Graphics;
 
 import jogo.recursosexternos.Imagem;
 
-public class VilaoChefao extends Vilao {
+public class VilaoChefao extends Personagem {
 	
 	private int limiteEsquerda;
 	private int limiteDireita;	

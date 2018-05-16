@@ -28,7 +28,7 @@ public class GerenciadorDeEstado {
 	public void draw(Graphics g) {
 		estados.peek().draw(g);
 	}
-	
+
 	public void keyPressed(int k) {
 		estados.peek().keyPressed(k);
 	}
@@ -36,4 +36,5 @@ public class GerenciadorDeEstado {
 	public void keyReleased(int k) {
 		estados.peek().keyReleased(k);
 	}
+
 }

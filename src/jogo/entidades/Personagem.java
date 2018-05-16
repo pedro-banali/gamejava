@@ -5,13 +5,13 @@ import java.awt.Rectangle;
 
 import jogo.recursosexternos.Camera;
 
-public abstract class Vilao{
+public abstract class Personagem{
 	protected int id;
 	protected int movimento;
 	protected Rectangle retangulo;	
 	protected Camera camera;
 	
-	public Vilao() {
+	public Personagem() {
 		camera = Camera.getInstance();
 		retangulo = new Rectangle();
 	}

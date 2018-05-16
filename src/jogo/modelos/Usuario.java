@@ -1,16 +1,19 @@
 package jogo.modelos;
 
-public class Usuario {
-	
+import java.io.Serializable;
+
+public class Usuario implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 	private String nome;
 	private int checkPointX;
 	private int checkPointY;
 	private int pontos;
-	private int vida = 0;
+	private int vida;
 	private int mapa;
 	
 	public Usuario() {
-		this.vida = 3;
+		this.vida = 1;
 		this.mapa = 1;
 		this.pontos = 0;
 	}
@@ -18,6 +21,8 @@ public class Usuario {
 	public void salvarPontos()
 	{
 		System.out.println("Nome: " + nome + "Pontos: " + pontos);
+		Ranking.getInstance().ordenarRanking();
+		Ranking.getInstance().salvarUsuario(this);
 	}
 	
 	public String getNome() {
@@ -57,6 +62,11 @@ public class Usuario {
 
 	public void setMapa(int mapa) {
 		this.mapa = mapa;
+	}
+	
+	public void setCheckpoint(int x) {
+		this.setCheckPointX(x);
+		this.setCheckPointY(-400);
 	}
 
 }

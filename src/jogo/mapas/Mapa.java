@@ -3,7 +3,7 @@ package jogo.mapas;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
-import jogo.entidades.Vilao;
+import jogo.entidades.Personagem;
 import jogo.obstaculos.Bloco;
 import jogo.obstaculos.BlocoMovimento;
 import jogo.obstaculos.ObstaculoDiverso;
@@ -19,7 +19,7 @@ public abstract class Mapa {
 	protected Bloco[][] blocos;
 
 	protected ArrayList<BlocoMovimento> blocoMovimentos;
-	protected ArrayList<Vilao> viloes;
+	protected ArrayList<Personagem> viloes;
 	protected ArrayList<ObstaculoDiverso> obstaculoDiversos;
 	public Mapa(String caminho , boolean mapaAtual)
 	{
@@ -44,7 +44,7 @@ public abstract class Mapa {
 		return blocos;
 	}
 
-	public ArrayList<Vilao> getViloes() {
+	public ArrayList<Personagem> getViloes() {
 		return viloes;
 	}
 

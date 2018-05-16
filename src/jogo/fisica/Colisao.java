@@ -2,12 +2,12 @@ package jogo.fisica;
 
 import java.awt.Point;
 
-import jogo.entidades.Vilao;
+import jogo.entidades.Personagem;
 import jogo.obstaculos.Obstaculo;
 
 public class Colisao {
 	
-	public static boolean playerVilao(Point p, Vilao v) {
+	public static boolean playerVilao(Point p, Personagem v) {
 		return v.getRetangulo().contains(p);
 	}
 	

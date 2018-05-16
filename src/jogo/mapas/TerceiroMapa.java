@@ -7,7 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import jogo.entidades.Vilao;
+import jogo.entidades.Personagem;
 import jogo.entidades.VilaoChefao;
 import jogo.obstaculos.Bloco;
 import jogo.obstaculos.BlocoMovimento;
@@ -19,7 +19,7 @@ public class TerceiroMapa extends Mapa {
 	public TerceiroMapa(String caminho, boolean mapaAtual) {
 		super(caminho, mapaAtual);
 		blocoMovimentos = new ArrayList<BlocoMovimento>();
-		viloes = new ArrayList<Vilao>();
+		viloes = new ArrayList<Personagem>();
 		blocos = new Bloco[height][width];
 		obstaculoDiversos = new ArrayList<ObstaculoDiverso>();
 
