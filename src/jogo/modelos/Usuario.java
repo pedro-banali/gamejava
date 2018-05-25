@@ -13,7 +13,7 @@ public class Usuario implements Serializable {
 	private int mapa;
 	
 	public Usuario() {
-		this.vida = 1;
+		this.vida = 10;
 		this.mapa = 1;
 		this.pontos = 0;
 	}

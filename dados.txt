@@ -1,3 +1,4 @@
 Lucas	 20
 Pedro	 20
 a	 20
+lucas	 0
